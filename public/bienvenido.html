@@ -109,8 +109,8 @@
       if (!codigo) {
         mensajeError.textContent = "El código es obligatorio";
         codigoInput.classList.add("campo-requerido");
-      } else if (!/^\d{14}$/.test(codigo)) {
-        mensajeError.textContent = "El código debe tener 6 dígitos numéricos";
+      } else if (!/^\d{4}$/.test(codigo)) {
+        mensajeError.textContent = "El código debe tener 4 dígitos numéricos";
         codigoInput.classList.add("campo-requerido");
       } else {
         // Enviar el código al backend
